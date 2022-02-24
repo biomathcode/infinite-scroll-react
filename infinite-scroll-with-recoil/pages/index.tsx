@@ -30,18 +30,8 @@ const Home: NextPage = () => {
   const [limit, setLimit] = useState(10);
 
   useEffect(() => {
-      toast.success('Fetching more users',{duration:1000})
+      toast.success('Fetched 10  more users',{duration:1000})
   },[users])
-
-  // useEffect(()=> {
-  //   const fetchData = async () => {
-  //     const response = await fetch(`https://api.github.com/users?since=0&per_page=${limit}`);
-  //     const json = await response.json();
-  //     setUser(json);
-  //     console.log(json)
-  //   }
-  //   fetchData();
-  // }, [])
 
 
   const fetchmore = async (since:number) => {
@@ -54,7 +44,7 @@ const Home: NextPage = () => {
   const [sentryRef] = useInfiniteScroll({
     loading, 
     hasNextPage: true,
-    delayInMs:1000,
+    delayInMs:500,
     onLoadMore: () => {
       setLoading(true);
       fetchmore(since);
