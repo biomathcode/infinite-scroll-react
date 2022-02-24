@@ -12,6 +12,15 @@
   align-items: center;
 }
 
+.item {
+  display: flex;
+  width: 300px;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #eaeaea;
+}
+
 .footer {
   display: flex;
   flex: 1;
@@ -21,11 +30,17 @@
   align-items: center;
 }
 
-.footer a {
+.footer {
   display: flex;
   justify-content: center;
+  position: sticky;
+  bottom: 0;
   align-items: center;
   flex-grow: 1;
+  background-color: white;
+}
+.footer a{
+  color:#0070f3
 }
 
 .title a {

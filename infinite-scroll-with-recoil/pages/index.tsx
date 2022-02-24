@@ -1,9 +1,62 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import styles from '../styles/Home.module.css'
 
+import { atom, useRecoilState } from 'recoil'
+import useInfiniteScroll from 'react-infinite-scroll-hook'
+
+const userState = atom({
+  key:'users', 
+  default: [] as USERS[]
+})
+
+interface USERS {
+  login: string
+  avatar_url: string
+  
+}
+
+
 const Home: NextPage = () => {
+
+  const [users, setUser] = useRecoilState(userState);
+
+  const [loading, setLoading] = useState(false);
+
+  const [since, setSince] = useState(0);
+  const [limit, setLimit] = useState(10);
+
+  // useEffect(()=> {
+  //   const fetchData = async () => {
+  //     const response = await fetch(`https://api.github.com/users?since=0&per_page=${limit}`);
+  //     const json = await response.json();
+  //     setUser(json);
+  //     console.log(json)
+  //   }
+  //   fetchData();
+  // }, [])
+
+
+  const fetchmore = async (since:number) => {
+    setSince(since + limit);
+    const response = await fetch(`https://api.github.com/users?since=${since}&per_page=${limit}`);
+    const json = await response.json();
+    setUser((data) => [...data, ...json]);
+  }
+
+  const [sentryRef] = useInfiniteScroll({
+    loading, 
+    hasNextPage: true,
+    delayInMs:1000,
+    onLoadMore: () => {
+      setLoading(true);
+      fetchmore(since);
+      setLoading(false);
+    }
+  })
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,56 +66,32 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        {users && users.map((item, index) => {
+          return (
+            <div key={index} className={styles.item}>
+              <p>{item && item.login }</p>
+              <img src={item.avatar_url} width={100} height={100} alt={item.avatar_url} />
+            </div>
+          )
+        })}
+        {
+          !loading && 
+          <div ref={sentryRef}>
+          <h1>Loading...</h1>
         </div>
+        }
+        
       </main>
 
       <footer className={styles.footer}>
+        <p>Example created by</p>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://twitter.com/biomathcode"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
+          @biomathcode
+          
         </a>
       </footer>
     </div>
