@@ -6,6 +6,7 @@ import styles from '../styles/Home.module.css'
 
 import { atom, useRecoilState } from 'recoil'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
+import {Toaster, toast} from 'react-hot-toast'
 
 const userState = atom({
   key:'users', 
@@ -27,6 +28,10 @@ const Home: NextPage = () => {
 
   const [since, setSince] = useState(0);
   const [limit, setLimit] = useState(10);
+
+  useEffect(() => {
+      toast.success('Fetching more users',{duration:1000})
+  },[users])
 
   // useEffect(()=> {
   //   const fetchData = async () => {
@@ -66,6 +71,8 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
+      <Toaster/>
+
         {users && users.map((item, index) => {
           return (
             <div key={index} className={styles.item}>
