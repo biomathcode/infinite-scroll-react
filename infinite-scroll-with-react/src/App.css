@@ -13,6 +13,16 @@
   }
 }
 
+.main {
+  min-height: 100vh;
+  padding: 4rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -24,15 +34,11 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.item {
+  display: flex;
+  width: 300px;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #eaeaea;
 }
