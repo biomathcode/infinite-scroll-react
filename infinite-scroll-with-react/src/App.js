@@ -14,22 +14,34 @@ function App() {
 
   const [loading, setLoading] = useState(false);
 
+  const [hasNextPage, setHasNextPage] = useState(true);
+
 
   const fetchmore = async (since) => {
+    
+    setLoading(true)
     setSince(since + limit);
-    const response = await fetch(`https://api.github.com/users?since=${since}&per_page=${limit}`);
-    const json = await response.json();
-    setData((data) => [...data, ...json]);
+    try {
+      const response = await fetch(`https://api.github.com/users?since=${since}&per_page=${limit}`);
+      const json = await response.json();
+     return  setData((data) => [...data, ...json]);
+    }
+    catch(e) {
+      console.log(e);
+      return setHasNextPage(false);
+    }
+    finally {
+     return  setLoading(false);
+    }
+    
   }
 
   const [sentryRef] = useInfiniteScroll({
     loading, 
-    hasNextPage: true,
+    hasNextPage: hasNextPage ,
     delayInMs:500,
     onLoadMore: () => {
-      setLoading(true);
       fetchmore(since);
-      setLoading(false);
     }
   })
 
@@ -46,7 +58,7 @@ function App() {
           )
         })}
         {
-          !loading && 
+          (loading || hasNextPage) && 
           <div className="loader" ref={sentryRef}>
           <h1>Loading...</h1>
         </div>
