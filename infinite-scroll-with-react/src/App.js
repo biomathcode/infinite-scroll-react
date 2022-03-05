@@ -35,6 +35,7 @@ function App() {
 
   return (
     <div className="App">
+      <h2>List of github users</h2>
       <main className='main'>
       {data && data.map((item, index) => {
           return (
@@ -46,7 +47,7 @@ function App() {
         })}
         {
           !loading && 
-          <div ref={sentryRef}>
+          <div className="loader" ref={sentryRef}>
           <h1>Loading...</h1>
         </div>
         }
